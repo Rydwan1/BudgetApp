@@ -85,9 +85,6 @@ namespace BudgetApp
                                 return;
                             Transaction.GetTransactionByCategory(selectedConsoleID, transactionsList, categoriesList, usersList);
                             break;
-                        case ConsoleKey.S:
-                            EstablishBudgetStructure();
-                            break;
 
                         default:
                             ManageProgramWorking();
