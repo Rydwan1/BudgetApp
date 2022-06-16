@@ -85,7 +85,7 @@ namespace BudgetApp
                 .MoreChoicesText("[grey](Przesuwaj w górę i w dół, aby przełączać pomiędzy kategoriami)[/]");
             foreach (KeyValuePair<int, Category> category in categoriesList)
             {
-                categoriesPrompt.AddChoices(category.Value.CategoryName.ToString());
+                categoriesPrompt.AddChoice($"{(category.Value.CategoryType == "income" ? "[green]" : "[red]")}{category.Value.CategoryName}[/]");
             }
             string selectedCategoryName = AnsiConsole.Prompt(categoriesPrompt);
             AnsiConsole.MarkupLine("Wybrałeś kategorię: [yellow]{0}[/]", selectedCategoryName);
@@ -170,13 +170,33 @@ namespace BudgetApp
                     {
                         if (category.Value.CategoryName == transactionsList[selectedTransactionID].TransactionCategory.CategoryName)
                         {
-                            categoriesPrompt.AddChoice($"{category.Value.CategoryName} (aktualna)");
+                            categoriesPrompt.AddChoice($"{(category.Value.CategoryType == "income" ? "[green]" : "[red]")}{category.Value.CategoryName} (aktualna)[/]");
                         } else
                         {
-                            categoriesPrompt.AddChoice(category.Value.CategoryName.ToString());
+                            categoriesPrompt.AddChoice($"{(category.Value.CategoryType == "income" ? "[green]" : "[red]")}{category.Value.CategoryName}[/]");
                         }
                     }
 
+
+                    var categoriesTable = new Table();
+
+                    categoriesTable
+                        .Border(TableBorder.Ascii)
+                        .AddColumn(new TableColumn("[darkorange][b]ID[/][/]").Footer("[darkorange][b]ID[/][/]").Centered())
+                        .AddColumn(new TableColumn("[darkorange][b]Typ[/][/]").Footer("[darkorange][b]Typ[/][/]").Centered())
+                        .AddColumn(new TableColumn("[darkorange][b]Nazwa[/][/]").Footer("[darkorange][b]Nazwa[/][/]").Centered())
+                        .AddColumn(new TableColumn("[darkorange][b]Aktywna[/][/]").Footer("[darkorange][b]Aktywna[/][/]").Centered());
+
+
+                    foreach (KeyValuePair<int, Category> category in categoriesList)
+                    {
+                        categoriesTable.AddRow(
+                            category.Value.CategoryID.ToString(),
+                            category.Value.CategoryType.ToString(),
+                            $"{(category.Value.CategoryType == "income" ? "[green]" : "[red]")}{category.Value.CategoryName}[/]",
+                            $"{(category.Value.IsActive ? "[blue]TAK[/]" : "[grey]NIE[/]")}"
+                         );
+                    }
                     string selectedCategoryName = AnsiConsole.Prompt(categoriesPrompt);
                     AnsiConsole.MarkupLine("Wybrałeś kategorię: [yellow]{0}[/]", selectedCategoryName);
                     int selectedCategoryID = categoriesList.FirstOrDefault(category => category.Value.CategoryName == selectedCategoryName).Key;
@@ -291,8 +311,9 @@ namespace BudgetApp
                     $"{(transaction.Value.TransactionCategory.CategoryType == "income" ? "[green]" : "[red]-")}{transaction.Value.TransactionAmount} zł[/]",
                     transaction.Value.TransactionDescription.ToString(),
                     transaction.Value.TransactionUser.UserFirstName.ToString(),
-                    transaction.Value.TransactionDate.ToString()
+                    transaction.Value.TransactionDate.ToString("dd-MM-yyyy")
                  );
+                transactionsTable.AddRow("","","","===","","");
             }
 
             AnsiConsole.Write(transactionsTable);
