@@ -89,7 +89,7 @@ namespace BudgetApp
             }
             string selectedCategoryName = AnsiConsole.Prompt(categoriesPrompt);
             AnsiConsole.MarkupLine("Wybrałeś kategorię: [yellow]{0}[/]", selectedCategoryName);
-            int selectedCategoryID = categoriesList.FirstOrDefault(category => category.Value.CategoryName.Equals(selectedCategoryName)).Key;
+            Category selectedCategory = categoriesList.FirstOrDefault(category => category.Value.CategoryName == (selectedCategoryName)).Value;
 
             double transactionAmount = AnsiConsole.Prompt(
                 new TextPrompt<double>("Podaj [green]kwotę[/] transakcji: ")
@@ -120,7 +120,7 @@ namespace BudgetApp
 
             DateTimeOffset date = GetConsoleInput.ChooseDateOfTransaction();
 
-            Transaction addingTransaction = new(transactionID, categoriesList[selectedCategoryID], transactionAmount, description, usersList[selectedUserID], date);
+            Transaction addingTransaction = new(transactionID, selectedCategory, transactionAmount, description, usersList[selectedUserID], date);
 
             transactionsList.Add(transactionID, addingTransaction);
 
