@@ -47,17 +47,44 @@ namespace BudgetApp
             //         - krotka zawierająca sumy i procenty z ww. kroków jako wartości.
             // Krok 4. Wyświetlić uporządkowaną tabelę w konsoli.
 
-            _budgetStructure = new Dictionary<string, (double CategoryAmount, double CategoryPercentage)>()
+            var transactionByCategories = new Dictionary<string, valueAndPercentage>();
+
+            //populate with categories
+            foreach (var category in categoriesList)
             {
-                ["Wynagrodzenie"] = (4, 10),
-                ["Zakupy"] = (10, 20),
-                ["Media"] = (0, 23)
-            };
+                transactionByCategories.Add(category.Value.CategoryName,new valueAndPercentage(0,0));
+            }
+
+            //sumup 
+            double sum = 0;
+            foreach (var transaction in transactionsList.Values)
+            {
+                transactionByCategories[transaction.TransactionCategory.CategoryName].value += transaction.TransactionAmount;
+                sum+= transaction.TransactionAmount;
+            }
+
+            //calculate %
+            foreach (var transByCat in transactionByCategories.Values)
+            {
+                transByCat.percentage = transByCat.value / sum; 
+            }
 
             foreach (KeyValuePair<string, (double amount, double percentage)> record in _budgetStructure)
             {
                 Console.WriteLine($" + {record.Key}: {record.Value.amount} PLN ({record.Value.percentage}%)");
             }
+        }
+        private class valueAndPercentage //musi być klasa structy też są immutable albo value type albo cośtam nie wiem
+        {
+            public valueAndPercentage(double value, double percentage)
+            {
+                this.value = value;
+                this.percentage = percentage;
+            }
+
+            public double value { get; set; }
+            public double percentage { get; set; }
+
         }
     }
 }
