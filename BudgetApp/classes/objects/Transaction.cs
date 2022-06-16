@@ -83,13 +83,13 @@ namespace BudgetApp
                 .PageSize(10)
                 .Title("Wybierz [green]kategorię[/] transakcji \n ([grey]Operuj strzałkami, a następnie naciśnij [green]ENTER[/] do zatwierdzenia)[/]")
                 .MoreChoicesText("[grey](Przesuwaj w górę i w dół, aby przełączać pomiędzy kategoriami)[/]");
-            foreach (KeyValuePair<int, Category> category in categoriesList)
+            foreach (Category category in categoriesList.Values)
             {
-                categoriesPrompt.AddChoices(category.Value.CategoryName.ToString());
+                categoriesPrompt.AddChoices($"{(category.CategoryType == "income" ? "[green]" : "[red]")}{category.CategoryName}[/]");
             }
             string selectedCategoryName = AnsiConsole.Prompt(categoriesPrompt);
             AnsiConsole.MarkupLine("Wybrałeś kategorię: [yellow]{0}[/]", selectedCategoryName);
-            int selectedCategoryID = categoriesList.FirstOrDefault(category => category.Value.CategoryName == selectedCategoryName).Key;
+            int selectedCategoryID = categoriesList.FirstOrDefault(category => category.Value.CategoryName.Equals(selectedCategoryName)).Key;
 
             double transactionAmount = AnsiConsole.Prompt(
                 new TextPrompt<double>("Podaj [green]kwotę[/] transakcji: ")
@@ -110,9 +110,9 @@ namespace BudgetApp
                 .PageSize(10)
                 .Title("Wybierz [green]użytkownika[/] \n ([grey]Operuj strzałkami, a następnie naciśnij [green]ENTER[/] do zatwierdzenia)[/]")
                 .MoreChoicesText("[grey](Przesuwaj w górę i w dół, aby przełączać pomiędzy użytkownikami)[/]");
-            foreach (KeyValuePair<int, User> user in usersList)
+            foreach (User user in usersList.Values)
             {
-                usersPrompt.AddChoices(user.Value.UserFirstName);
+                usersPrompt.AddChoices(user.UserFirstName);
             }
             string selectedUserName = AnsiConsole.Prompt(usersPrompt);
             AnsiConsole.MarkupLine("Wybrałeś użytkownika: [yellow]{0}[/]", selectedUserName);
@@ -166,14 +166,14 @@ namespace BudgetApp
                         .PageSize(10)
                         .Title("Wybierz [green]kategorię[/] transakcji \n ([grey]Operuj strzałkami, a następnie naciśnij [green]ENTER[/] do zatwierdzenia)[/]")
                         .MoreChoicesText("[grey](Przesuwaj w górę i w dół, aby przełączać pomiędzy kategoriami)[/]");
-                    foreach (KeyValuePair<int, Category> category in categoriesList)
+                    foreach (Category category in categoriesList.Values)
                     {
-                        if (category.Value.CategoryName == transactionsList[selectedTransactionID].TransactionCategory.CategoryName)
+                        if (category.CategoryName == transactionsList[selectedTransactionID].TransactionCategory.CategoryName)
                         {
-                            categoriesPrompt.AddChoice($"{category.Value.CategoryName} (aktualna)");
+                            categoriesPrompt.AddChoice($"{category.CategoryName} (aktualna)");
                         } else
                         {
-                            categoriesPrompt.AddChoice(category.Value.CategoryName.ToString());
+                            categoriesPrompt.AddChoice(category.CategoryName.ToString());
                         }
                     }
 
@@ -200,15 +200,15 @@ namespace BudgetApp
                         .PageSize(10)
                         .Title("Wybierz [green]użytkownika[/] \n ([grey]Operuj strzałkami, a następnie naciśnij [green]ENTER[/] do zatwierdzenia)[/]")
                         .MoreChoicesText("[grey](Przesuwaj w górę i w dół, aby przełączać pomiędzy użytkownikami)[/]");
-                    foreach (KeyValuePair<int, User> user in usersList)
+                    foreach (User user in usersList.Values)
                     {
-                        if (user.Value.UserFirstName == transactionsList[selectedTransactionID].TransactionUser.UserFirstName)
+                        if (user.UserFirstName == transactionsList[selectedTransactionID].TransactionUser.UserFirstName)
                         {
-                            usersPrompt.AddChoice($"{user.Value.UserFirstName} (aktualny)");
+                            usersPrompt.AddChoice($"{user.UserFirstName} (aktualny)");
                         }
                         else
                         {
-                            usersPrompt.AddChoice(user.Value.UserFirstName.ToString());
+                            usersPrompt.AddChoice(user.UserFirstName.ToString());
                         }
                     }
                     string selectedUserName = AnsiConsole.Prompt(usersPrompt);
@@ -283,15 +283,15 @@ namespace BudgetApp
                 .AddColumn(new TableColumn("[darkorange][b]Data[/][/]").Footer("[darkorange][b]Data[/][/]").Centered());
 
 
-            foreach (KeyValuePair<int, Transaction> transaction in transactionsList)
+            foreach (Transaction transaction in transactionsList.Values)
             {
                 transactionsTable.AddRow(
-                    transaction.Value.TransactionID.ToString(),
-                    transaction.Value.TransactionCategory.CategoryName.ToString(),
-                    $"{(transaction.Value.TransactionCategory.CategoryType == "income" ? "[green]" : "[red]-")}{transaction.Value.TransactionAmount} zł[/]",
-                    transaction.Value.TransactionDescription.ToString(),
-                    transaction.Value.TransactionUser.UserFirstName.ToString(),
-                    transaction.Value.TransactionDate.ToString()
+                    transaction.TransactionID.ToString(),
+                    transaction.TransactionCategory.CategoryName.ToString(),
+                    $"{(transaction.TransactionCategory.CategoryType == "income" ? "[green]" : "[red]-")}{transaction.TransactionAmount} zł[/]",
+                    transaction.TransactionDescription.ToString(),
+                    transaction.TransactionUser.UserFirstName.ToString(),
+                    transaction.TransactionDate.ToString()
                  );
             }
 
@@ -345,9 +345,9 @@ namespace BudgetApp
                         .PageSize(10)
                         .Title("Wybierz [green]użytkownika[/] ([grey]Przesuwaj w górę i w dół, aby przełączać pomiędzy użytkownikami. Naciśnij [green]ENTER[/] do zatwierdzenia[/])")
                         .MoreChoicesText("[grey](Przesuwaj w górę i w dół, aby przełączać pomiędzy użytkownikami)[/]");
-                    foreach (KeyValuePair<int, User> user in usersList)
+                    foreach (User user in usersList.Values)
                     {
-                        usersPrompt.AddChoices(user.Value.UserFirstName);
+                        usersPrompt.AddChoices(user.UserFirstName);
                     }
                     string selectedUserName = AnsiConsole.Prompt(usersPrompt);
                     AnsiConsole.MarkupLine("Wybrałeś użytkownika: [yellow]{0}[/]", selectedUserName);
@@ -361,9 +361,9 @@ namespace BudgetApp
                         .PageSize(10)
                         .Title("Wybierz [green]kategorię[/] transakcji ([grey]Przesuwaj w górę i w dół, aby przełączać pomiędzy użytkownikami. Naciśnij [green]ENTER[/] do zatwierdzenia[/])")
                         .MoreChoicesText("[grey](Przesuwaj w górę i w dół, aby przełączać pomiędzy kategoriami)[/]");
-                    foreach (KeyValuePair<int, Category> category in categoriesList)
+                    foreach (Category category in categoriesList.Values)
                     {
-                        categoriesPrompt.AddChoices(category.Value.CategoryName.ToString());
+                        categoriesPrompt.AddChoices(category.CategoryName.ToString());
                     }
                     string selectedCategoryName = AnsiConsole.Prompt(categoriesPrompt);
                     AnsiConsole.MarkupLine("Wybrałeś kategorię: [yellow]{0}[/]", selectedCategoryName);

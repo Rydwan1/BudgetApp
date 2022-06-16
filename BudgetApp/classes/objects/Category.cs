@@ -126,13 +126,13 @@ namespace BudgetApp
                 .AddColumn(new TableColumn("[darkorange][b]Aktywna[/][/]").Footer("[darkorange][b]Aktywna[/][/]").Centered());
 
 
-            foreach (KeyValuePair<int, Category> category in categoriesList)
+            foreach (Category category in categoriesList.Values)
             {
                 categoriesTable.AddRow(
-                    category.Value.CategoryID.ToString(),
-                    category.Value.CategoryType.ToString(),
-                    $"{(category.Value.CategoryType == "income" ? "[green]" : "[red]")}{category.Value.CategoryName}[/]",
-                    $"{(category.Value.IsActive ? "[blue]TAK[/]" : "[grey]NIE[/]")}"
+                    category.CategoryID.ToString(),
+                    category.CategoryType.ToString(),
+                    $"{(category.CategoryType == "income" ? "[green]" : "[red]")}{category.CategoryName}[/]",
+                    $"{(category.IsActive ? "[blue]TAK[/]" : "[grey]NIE[/]")}"
                  );
             }
 

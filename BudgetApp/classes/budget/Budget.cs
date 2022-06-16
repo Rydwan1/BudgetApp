@@ -8,7 +8,7 @@ namespace BudgetApp
     public class Budget : BudgetService, IBudget
     {
         private double _balance = 0;
-        private Dictionary<string, (double, double)> _budgetStructure;
+        private Dictionary<string, valueAndPercentage> _budgetStructure;
 
         internal static Dictionary<int, Transaction> transactionsList;
         internal static Dictionary<int, User> usersList;
@@ -47,13 +47,33 @@ namespace BudgetApp
             //         - krotka zawierająca sumy i procenty z ww. kroków jako wartości.
             // Krok 4. Wyświetlić uporządkowaną tabelę w konsoli.
 
-            _budgetStructure = new Dictionary<string, (double CategoryAmount, double CategoryPercentage)>()
-            {
-                ["Wynagrodzenie"] = (4, 10),
-                ["Zakupy"] = (10, 20),
-                ["Media"] = (0, 23)
-            };
+            var transactionByCategories = new Dictionary<string, valueAndPercentage>();
 
+            //populate with categories
+            foreach (var category in categoriesList)
+            {
+                transactionByCategories.Add(category.Value.CategoryName, new valueAndPercentage(0, 0));
+            }
+
+            //sumup 
+            double sum = 0;
+            foreach (var transaction in transactionsList.Values)
+            {
+                transactionByCategories[transaction.TransactionCategory.CategoryName].value += transaction.TransactionAmount;
+                sum += transaction.TransactionAmount;
+            }
+
+            //calculate %
+            foreach (var transByCat in transactionByCategories.Values)
+            {
+                transByCat.percentage = transByCat.value / sum;
+            }
+
+            _budgetStructure = transactionByCategories;
+            foreach (KeyValuePair<string, valueAndPercentage> record in _budgetStructure)
+            {
+                Console.WriteLine($" + {record.Key}: {record.Value.value} PLN ({record.Value.percentage * 100} %)");
+            }
             AnsiConsole.Write(new BarChart()
                 .Width(60)
                 .Label("[green bold underline]Number of fruits[/]")
@@ -61,11 +81,18 @@ namespace BudgetApp
                 .AddItem("Apple", 12, Color.Yellow)
                 .AddItem("Orange", 54, Color.Green)
                 .AddItem("Banana", 33, Color.Red));
-
-            foreach (KeyValuePair<string, (double amount, double percentage)> record in _budgetStructure)
+        }
+        private class valueAndPercentage //musi być klasa structy też są immutable albo value type albo cośtam nie wiem
+        {
+            public valueAndPercentage(double value, double percentage)
             {
-                Console.WriteLine($" + {record.Key}: {record.Value.amount} PLN ({record.Value.percentage}%)");
+                this.value = value;
+                this.percentage = percentage;
             }
+
+            public double value { get; set; }
+            public double percentage { get; set; }
+
         }
 
         public void ManageBudgetSummary()
