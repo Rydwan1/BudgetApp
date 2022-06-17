@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BudgetApp
+﻿namespace BudgetApp
 {
     public interface ITransactionObject
     {

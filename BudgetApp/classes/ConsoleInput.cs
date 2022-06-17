@@ -35,6 +35,7 @@ namespace BudgetApp
             }
         }
     }
+
     public class GetConsoleInput
     {
         internal static DateTimeOffset ChooseDateOfTransaction()
@@ -55,6 +56,7 @@ namespace BudgetApp
                 Console.WriteLine($"Nieprawidłowy format daty! ma być w formacie DD-MM-RRRR, przykład - dzisiaj jest {DateTimeOffset.Now.ToString("dd-MM-yyyy")}");
             }
         }
+
         internal static double UserInputTransactionAmmount(bool allowEmpty)
         {
             Console.WriteLine("Wprowadź kwotę PLN");

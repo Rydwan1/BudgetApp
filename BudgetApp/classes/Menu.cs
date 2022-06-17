@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BudgetApp
 {
     public class Menu : Budget, IMenu
     {
         private static bool _isProgramOpen = true;
+
         private static readonly Dictionary<string, string> _programOptions = new()
         {
             { "[w]", "Wyświetl listę domowników" },
             { "[d]", "Wyświetl transakcje" },
-            { "[f]", "Wyświetl listę kategorii"},
-            { "[c]", "Wyświetl transakcje wg kategorii"},
+            { "[f]", "Wyświetl listę kategorii" },
+            { "[c]", "Wyświetl transakcje wg kategorii" },
             { "[u]", "Wyświetl transakcje wg użytkownika" },
-            { "[s]", "Wyświetl podsumowanie"}
+            { "[s]", "Wyświetl podsumowanie" }
         };
 
         public bool IsProgramOpen { get => _isProgramOpen; set => _isProgramOpen = value; }
@@ -30,6 +30,7 @@ namespace BudgetApp
                 Console.WriteLine($" {option.Key} - {option.Value}");
             }
         }
+
         public static void ManageProgramWorking()
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -45,57 +46,57 @@ namespace BudgetApp
             }
             Console.ForegroundColor = ConsoleColor.Gray;
         }
+
         public void HandleMenu()
         {
-                do
+            do
+            {
+                PrintMenuHeader();
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+                Console.Clear();
+
+                switch (keyInfo.Key)
                 {
-                    PrintMenuHeader();
+                    case ConsoleKey.W:
+                        User.ManageUsers(usersList);
+                        break;
 
-                    ConsoleKeyInfo keyInfo = Console.ReadKey();
+                    case ConsoleKey.D:
+                        Transaction.ManageTransactions(transactionsList, categoriesList, usersList);
+                        break;
 
-                    Console.Clear();
+                    case ConsoleKey.F:
+                        Category.ManageCategories(categoriesList);
+                        break;
 
-                    switch (keyInfo.Key)
-                    {
-                        case ConsoleKey.W:
-                            User.ManageUsers(usersList);
+                    case ConsoleKey.U:
+                        User.PrintUsers(false, usersList);
+                        int selectedUserID = GetConsoleInput<User>.GetUserInputID(usersList, false);
+                        if (selectedUserID == -1)
                             break;
+                        Transaction.GetTransactionByUser(selectedUserID, transactionsList, categoriesList, usersList);
+                        break;
 
-                        case ConsoleKey.D:
-                            Transaction.ManageTransactions(transactionsList, categoriesList, usersList);
-                            break;
-
-                        case ConsoleKey.F:
-                            Category.ManageCategories(categoriesList);
-                            break;
-
-                        case ConsoleKey.U:
-                            User.PrintUsers(false, usersList);
-                            int selectedUserID = GetConsoleInput<User>.GetUserInputID(usersList, false);
-                            if (selectedUserID == -1)
-                                break;
-                            Transaction.GetTransactionByUser(selectedUserID, transactionsList, categoriesList, usersList );
-                            break;
-
-                        case ConsoleKey.C:
-                            Category.PrintCategories(false, categoriesList);
-                            int selectedConsoleID = GetConsoleInput<Category>.GetUserInputID(categoriesList, false);
+                    case ConsoleKey.C:
+                        Category.PrintCategories(false, categoriesList);
+                        int selectedConsoleID = GetConsoleInput<Category>.GetUserInputID(categoriesList, false);
                         if (selectedConsoleID == -1)
-                                break;
-                            Transaction.GetTransactionByCategory(selectedConsoleID, transactionsList, categoriesList, usersList);
                             break;
-                        case ConsoleKey.S:
-                            EstablishBudgetStructure();
-                            break;
+                        Transaction.GetTransactionByCategory(selectedConsoleID, transactionsList, categoriesList, usersList);
+                        break;
 
-                        default:
-                            ManageProgramWorking();
-                            break;
-                    }
-                } while (_isProgramOpen);
+                    case ConsoleKey.S:
+                        EstablishBudgetStructure();
+                        break;
+
+                    default:
+                        ManageProgramWorking();
+                        break;
+                }
+            } while (_isProgramOpen);
             Console.ReadKey();
         }
-
-        }
     }
-
+}

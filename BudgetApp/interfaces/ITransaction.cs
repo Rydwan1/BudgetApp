@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BudgetApp
 {
-    interface ITransaction
+    internal interface ITransaction
     {
         int TransactionID { get; set; }
         Category TransactionCategory { get; set; }
@@ -13,10 +13,15 @@ namespace BudgetApp
         DateTimeOffset TransactionDate { get; set; }
 
         static Dictionary<int, Transaction> GetTransactionByCategory(int selectedCategoryID, Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList) => throw new NotImplementedException();
+
         static Dictionary<int, Transaction> GetTransactionByUser(int selectedUserID, Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList) => throw new NotImplementedException();
+
         static void AddTransactionReworked(Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList) => throw new NotImplementedException();
+
         static void EditTransactionReworked(int selectedTransactionID, Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList) => throw new NotImplementedException();
+
         static void ManageTransactions(Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList) => throw new NotImplementedException();
-        public void PrintProperties();   
+
+        public void PrintProperties();
     }
 }

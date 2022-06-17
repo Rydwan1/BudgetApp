@@ -30,6 +30,7 @@ namespace BudgetApp
                 $"categoryType: {_name} \n" +
                 $"isActive: {_isActive} \n");
         }
+
         public static void PrintCategories(bool onlyActive, Dictionary<int, Category> categoriesList)
         {
             foreach (KeyValuePair<int, Category> record in categoriesList)
@@ -53,7 +54,6 @@ namespace BudgetApp
             Console.Clear();
             Console.WriteLine("Lista wszystkich kategorii:");
             Console.ForegroundColor = ConsoleColor.Yellow;
-
 
             PrintCategories(false, categoriesList);
 
@@ -115,6 +115,5 @@ namespace BudgetApp
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("\n");
         }
-
     }
 }

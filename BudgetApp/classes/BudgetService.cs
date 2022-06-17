@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace BudgetApp
-{  
+{
     public abstract class BudgetService : IBudgetService
     {
         internal static readonly Dictionary<string, string> fileNames = new()
@@ -36,6 +36,7 @@ namespace BudgetApp
             }
             return returnDictionary;
         }
+
         public static Dictionary<int, Category> LoadCategoryList(string fileName)
         {
             Dictionary<int, Category> returnDictionary = null;
@@ -45,7 +46,7 @@ namespace BudgetApp
             }
             else
             {
-                returnDictionary =  JsonConvert.DeserializeObject<Dictionary<int, Category>>(File.ReadAllText(GetDatabasePath(fileName)));
+                returnDictionary = JsonConvert.DeserializeObject<Dictionary<int, Category>>(File.ReadAllText(GetDatabasePath(fileName)));
             }
             if (returnDictionary == null)
             {
@@ -53,6 +54,7 @@ namespace BudgetApp
             }
             return returnDictionary;
         }
+
         public static Dictionary<int, User> LoadUserList(string fileName)
         {
             Dictionary<int, User> returnDictionary = null;
@@ -80,6 +82,7 @@ namespace BudgetApp
         {
             File.WriteAllText(GetDatabasePath(fileName), JsonConvert.SerializeObject(usersList));
         }
+
         public static void SaveCategoryList(Dictionary<int, Category> categoryList, string fileName)
         {
             File.WriteAllText(GetDatabasePath(fileName), JsonConvert.SerializeObject(categoryList));

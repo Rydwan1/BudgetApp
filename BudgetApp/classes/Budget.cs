@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BudgetApp
 {
@@ -17,7 +16,6 @@ namespace BudgetApp
             categoriesList = LoadCategoryList(fileNames["Categories"]);
         }
 
-
         public void EstablishBudgetStructure()
         {
             var incomeCategories = new Dictionary<string, valueAndPercentage>();
@@ -26,12 +24,12 @@ namespace BudgetApp
             foreach (var category in categoriesList.Values)
             {
                 if (category.CategoryType.Equals("income"))
-                    incomeCategories.Add(category.CategoryName,new valueAndPercentage(0,0));
+                    incomeCategories.Add(category.CategoryName, new valueAndPercentage(0, 0));
                 else if (category.CategoryType.Equals("expense"))
-                    expenseCategories.Add(category.CategoryName, new valueAndPercentage(0,0));
+                    expenseCategories.Add(category.CategoryName, new valueAndPercentage(0, 0));
             }
 
-            //sumup 
+            //sumup
             double sumExpense = 0;
             double sumIncome = 0;
             foreach (var transaction in transactionsList.Values)
@@ -51,7 +49,7 @@ namespace BudgetApp
             //calculate %
             foreach (var incomeTrans in incomeCategories.Values)
             {
-                incomeTrans.percentage = incomeTrans.value / sumIncome; 
+                incomeTrans.percentage = incomeTrans.value / sumIncome;
             }
             foreach (var expenseTrans in expenseCategories.Values)
             {
@@ -76,6 +74,7 @@ namespace BudgetApp
             Console.WriteLine($"\n\t saldo: {(sumIncome - sumExpense).ToString("#.##")}");
             Console.ReadLine();
         }
+
         private class valueAndPercentage
         {
             public valueAndPercentage(double value, double percentage)

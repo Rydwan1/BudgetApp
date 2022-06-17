@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BudgetApp
 {
-    interface IMenu
+    internal interface IMenu
     {
         bool IsProgramOpen { get; set; }
-        Dictionary<string,string> ProgramOptions { get; }
+        Dictionary<string, string> ProgramOptions { get; }
+
         void HandleMenu();
+
         static void ManageProgramWorking() { }
     }
 }
