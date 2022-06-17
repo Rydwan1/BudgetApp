@@ -20,10 +20,10 @@ namespace BudgetApp
         public bool IsProgramOpen { get => _isProgramOpen; set => _isProgramOpen = value; }
         public Dictionary<string, string> ProgramOptions { get => _programOptions; }
 
-        private static void PrintMenuHeader(User user)
+        private static void PrintMenuHeader()
         {
             Console.Clear();
-            Console.WriteLine($"Witamy {user.UserFirstName} {user.UserLastName} w aplikacji budżetowej. Aby przejść dalej, wybierz opcję z listy poniżej:");
+            Console.WriteLine("Witamy w aplikacji budżetowej. Aby przejść dalej, wybierz opcję z listy poniżej:");
 
             foreach (KeyValuePair<string, string> option in _programOptions)
             {
@@ -45,13 +45,11 @@ namespace BudgetApp
             }
             Console.ForegroundColor = ConsoleColor.Gray;
         }
-        public void HandleMenu(User user)
+        public void HandleMenu()
         {
-            if (user.UserIsActive)
-            {
                 do
                 {
-                    PrintMenuHeader(user);
+                    PrintMenuHeader();
 
                     ConsoleKeyInfo keyInfo = Console.ReadKey();
 
@@ -75,15 +73,15 @@ namespace BudgetApp
                             User.PrintUsers(false, usersList);
                             int selectedUserID = GetConsoleInput<User>.GetUserInputID(usersList, false);
                             if (selectedUserID == -1)
-                                return;
+                                break;
                             Transaction.GetTransactionByUser(selectedUserID, transactionsList, categoriesList, usersList );
                             break;
 
                         case ConsoleKey.C:
                             Category.PrintCategories(false, categoriesList);
                             int selectedConsoleID = GetConsoleInput<Category>.GetUserInputID(categoriesList, false);
-                            if (selectedConsoleID == -1)
-                                return;
+                        if (selectedConsoleID == -1)
+                                break;
                             Transaction.GetTransactionByCategory(selectedConsoleID, transactionsList, categoriesList, usersList);
                             break;
                         case ConsoleKey.S:
@@ -95,12 +93,9 @@ namespace BudgetApp
                             break;
                     }
                 } while (_isProgramOpen);
-            } else
-            {
-                Console.WriteLine("Konto nieaktywne - brak uprawnień");
-                ManageProgramWorking();
-            }
-                Console.ReadKey();
+            Console.ReadKey();
+        }
+
         }
     }
-}
+

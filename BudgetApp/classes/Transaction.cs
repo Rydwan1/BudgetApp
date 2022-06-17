@@ -31,42 +31,42 @@ namespace BudgetApp
 
         public override void PrintProperties()
         {
-            Console.WriteLine($"id: {_id} \n" +
-                $"categoryName: {_category.CategoryName} \n" +
-                $"categoryType: {_category.CategoryType} \n" +
-                $"amount: {_amount} \n" +
-                $"description: {_description} \n" +
-                $"user: {_user.UserFirstName} {_user.UserLastName} \n" +
-                $"date: {_date}");
+            Console.WriteLine($"Kategoria: {_category.CategoryName} \n" +
+                $"Ilość: {_amount} \n" +
+                $"Opis: {_description} \n" +
+                $"Domownik: {_user.UserFirstName} {_user.UserLastName} \n" +
+                $"Data: {_date.ToString("dd-MM-yyyy")}");
         }
 
         public static Dictionary<int, Transaction> GetTransactionByCategory(int selectedCategoryID, Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList)
         {
             Dictionary<int, Transaction> selectedCategoryTransaciton = new();
-            var selectedCategory = categoriesList[selectedCategoryID];
             foreach (KeyValuePair<int, Transaction> transaction in transactionsList)
             {
-                if (selectedCategory.Equals(transaction.Value.TransactionCategory))
+                if (selectedCategoryID == (transaction.Value.TransactionCategory.CategoryID))
                 {
                     selectedCategoryTransaciton.Add(transaction.Key, transaction.Value);
                 }
             }
-            Transaction.ManageTransactions(selectedCategoryTransaciton, categoriesList, usersList);
+            Console.Clear();
+            PrintTransactionList(selectedCategoryTransaciton);
+            Console.ReadLine();
             return selectedCategoryTransaciton;
         }
 
         public static Dictionary<int, Transaction> GetTransactionByUser(int selectedUserID, Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList)
         {
             Dictionary<int, Transaction> selectedUserTransaciton = new();
-            var selectedUser = usersList[selectedUserID];
             foreach (KeyValuePair<int, Transaction> transaction in transactionsList)
             {
-                if (selectedUser.Equals(transaction.Value.TransactionUser))
+                if (selectedUserID == (transaction.Value.TransactionUser.UserID))
                 {
                     selectedUserTransaciton.Add(transaction.Key, transaction.Value);
                 }
             }
-            Transaction.ManageTransactions(selectedUserTransaciton, categoriesList, usersList);
+            Console.Clear();
+            PrintTransactionList(selectedUserTransaciton);
+            Console.ReadLine();
             return selectedUserTransaciton;
         }
 
@@ -145,7 +145,33 @@ namespace BudgetApp
         public static void ManageTransactions(Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList)
         {
             Console.Clear();
-            Console.WriteLine("[0] - dodaj nową transakcje");
+            PrintTransactionList(transactionsList);
+            Console.WriteLine("\n -> Wybierz 0, aby dodać nową transakcję. \n -> Jeżeli chcesz zmodyfikować dane istniejącej transakacji, wypisz jego numer ID. \n -> Aby wrócić do głównego menu, naciśnij ENTER, pozostawiając pole puste. "); //help
+            while (true)
+            {
+                string consoleInput = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(consoleInput))
+                {
+                    Console.Clear();
+                    return;
+                }
+                if (consoleInput.Equals("0"))
+                {
+                    AddTransactionReworked(transactionsList, categoriesList, usersList);
+                    return;
+                }
+                int selectedID = -1;
+                if (int.TryParse(consoleInput, out selectedID) && transactionsList.ContainsKey(selectedID))
+                {
+                    EditTransactionReworked(selectedID, transactionsList, categoriesList, usersList);
+                    return;
+                }
+                Console.WriteLine("podanego id nie ma na liscie transakcji");
+            }
+        }
+
+        private static void PrintTransactionList(Dictionary<int, Transaction> transactionsList)
+        {
             bool colorChanger = false;
             foreach (KeyValuePair<int, Transaction> transaction in transactionsList)
             {
@@ -176,28 +202,6 @@ namespace BudgetApp
                 colorChanger = !colorChanger;
             }
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("\n -> Wybierz 0, aby dodać nową transakcję. \n -> Jeżeli chcesz zmodyfikować dane istniejącej transakacji, wypisz jego numer ID. \n -> Aby wrócić do głównego menu, naciśnij ENTER, pozostawiając pole puste. "); //help
-            while (true)
-            {
-                string consoleInput = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(consoleInput))
-                {
-                    Console.Clear();
-                    return;
-                }
-                if (consoleInput.Equals("0"))
-                {
-                    AddTransactionReworked(transactionsList, categoriesList, usersList);
-                    return;
-                }
-                int selectedID = -1;
-                if (int.TryParse(consoleInput, out selectedID) && transactionsList.ContainsKey(selectedID))
-                {
-                    EditTransactionReworked(selectedID, transactionsList, categoriesList, usersList);
-                    return;
-                }
-                Console.WriteLine("podanego id nie ma na liscie transakcji");
-            }
         }
     }
 }

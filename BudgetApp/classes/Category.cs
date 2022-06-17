@@ -96,22 +96,22 @@ namespace BudgetApp
                 categoriesList.Add(addingCategory.CategoryID, addingCategory);
                 return;
             }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine($"Wpisz nową nazwę kategorii, zostaw puste żeby pominąć({categoriesList[consoleID].CategoryName}): ");
+                string newCategoryName = Console.ReadLine();
+                categoriesList[consoleID].CategoryName = String.IsNullOrWhiteSpace(newCategoryName) ? categoriesList[consoleID].CategoryName : newCategoryName;
+                Console.Clear();
 
-            Console.Clear();
+                Console.WriteLine($"Kategoria jest aktywna({categoriesList[consoleID].IsActive})? (t/n), zostaw puste żeby nie zmieniać ");
+                string newActiveStatus = Console.ReadLine().ToUpper();
 
-            Console.WriteLine($"Wpisz nową nazwę kategorii, zostaw puste żeby pominąć({categoriesList[consoleID].CategoryName}): ");
-            string newCategoryName = Console.ReadLine();
-            categoriesList[consoleID].CategoryName = String.IsNullOrWhiteSpace(newCategoryName) ? categoriesList[consoleID].CategoryName : newCategoryName;
-            Console.Clear();
-
-            Console.WriteLine($"Kategoria jest aktywna({categoriesList[consoleID].IsActive})? (t/n), zostaw puste żeby nie zmieniać ");
-            string newActiveStatus = Console.ReadLine().ToUpper();
-
-            if (newActiveStatus.Equals("T"))
-                categoriesList[consoleID].IsActive = true;
-            else if (newActiveStatus.Equals("N"))
-                categoriesList[consoleID].IsActive = false;
-
+                if (newActiveStatus.Equals("T"))
+                    categoriesList[consoleID].IsActive = true;
+                else if (newActiveStatus.Equals("N"))
+                    categoriesList[consoleID].IsActive = false;
+            }
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("\n");
         }

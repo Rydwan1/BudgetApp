@@ -4,35 +4,19 @@ using System.Linq;
 
 namespace BudgetApp
 {
-    public class Budget : BudgetService, IBudget
+    public class Budget : BudgetService
     {
-        private Dictionary<int, Transaction> _budget;
-        private double _balance = 0;
-
         internal static Dictionary<int, Transaction> transactionsList;
         internal static Dictionary<int, User> usersList;
         internal static Dictionary<int, Category> categoriesList;
 
-        public Dictionary<int, Transaction> BudgetData { get => _budget; set => _budget = value; }
-        public string BudgetSelector { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double BudgetBalance { get => _balance; set => _balance = value; }
-
         public Budget()
         {
-            _budget = transactionsList = LoadTransactionList(fileNames["Transactions"]);
+            transactionsList = LoadTransactionList(fileNames["Transactions"]);
             usersList = LoadUserList(fileNames["Users"]);
             categoriesList = LoadCategoryList(fileNames["Categories"]);
         }
 
-        public void UpdateBudget(Dictionary<int, Transaction> newData) => _budget = newData;
-
-        public void CalculateBalance()
-        {
-            foreach (KeyValuePair<int, Transaction> record in _budget) _balance += record.Value.TransactionAmount;
-
-            Console.WriteLine($"Stan konta: {_balance}");
-            _balance = 0;
-        }
 
         public void EstablishBudgetStructure()
         {
@@ -85,7 +69,7 @@ namespace BudgetApp
             Console.ForegroundColor = ConsoleColor.Red;
             foreach (KeyValuePair<string, valueAndPercentage> record in expenseCategories)
             {
-                Console.WriteLine($" + {record.Key}: {record.Value.value} PLN ({(record.Value.percentage * 100).ToString("#.##")}%)");
+                Console.WriteLine($" - {record.Key}: {record.Value.value} PLN ({(record.Value.percentage * 100).ToString("#.##")}%)");
             }
             Console.ForegroundColor = ConsoleColor.Gray;
 
