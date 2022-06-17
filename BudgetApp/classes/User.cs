@@ -57,26 +57,10 @@ namespace BudgetApp
             Console.WriteLine("Lista wszystkich domowników:");
             Console.ForegroundColor = ConsoleColor.Yellow;
 
-            Console.WriteLine(" + [0]: dodaj nowego domownika");
             PrintUsers(false, usersList);
             Console.WriteLine(" \n -> Wybierz 0, aby dodać nowego domownika. \n -> Jeżeli chcesz zmodyfikować dane istniejącego domownika, wypisz jego numer ID. \n -> Aby wrócić do głównego menu, naciśnij ENTER, pozostawiając pole puste.");
             int consoleID = GetConsoleInput<User>.GetUserInputID(usersList, false);
             if (consoleID == -1)
-                Console.WriteLine(" + [0]: dodaj nowego domownika");
-            foreach (KeyValuePair<int, User> record in usersList)
-            {
-                Console.WriteLine(
-                    $" + [{record.Key}]: " +
-                    $"{record.Value.UserFirstName} {record.Value.UserLastName} " +
-                    $"{(record.Value.UserIsActive ? "AKTYWNY" : "NIEAKTYWNY")} " +
-                    $"{(record.Value.UserIsAdmin ? "ADMINISTRATOR" : "USER")} ");
-            }
-
-            Console.WriteLine(" \n -> Wybierz 0, aby dodać nowego domownika. \n -> Jeżeli chcesz zmodyfikować dane istniejącego domownika, wypisz jego numer ID. \n -> Aby wrócić do głównego menu, naciśnij ENTER, pozostawiając pole puste.");
-            string userInput = Console.ReadLine();
-
-            if (String.IsNullOrWhiteSpace(userInput))
-
             {
                 Console.Clear();
                 return;

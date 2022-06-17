@@ -43,7 +43,7 @@ namespace BudgetApp
         public static Dictionary<int, Transaction> GetTransactionByCategory(int selectedCategoryID, Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList)
         {
             Dictionary<int, Transaction> selectedCategoryTransaciton = new();
-            var selectedCategory = categoriesList[selectedCategoryID]; //bez walidacji, walidacja bedzie tam gdzie będzie ta metoda jest wywoływana
+            var selectedCategory = categoriesList[selectedCategoryID];
             foreach (KeyValuePair<int, Transaction> transaction in transactionsList)
             {
                 if (selectedCategory.Equals(transaction.Value.TransactionCategory))
@@ -58,7 +58,7 @@ namespace BudgetApp
         public static Dictionary<int, Transaction> GetTransactionByUser(int selectedUserID, Dictionary<int, Transaction> transactionsList, Dictionary<int, Category> categoriesList, Dictionary<int, User> usersList)
         {
             Dictionary<int, Transaction> selectedUserTransaciton = new();
-            var selectedUser = usersList[selectedUserID]; //bez walidacji, walidacja bedzie tam gdzie będzie ta metoda jest wywoływana
+            var selectedUser = usersList[selectedUserID];
             foreach (KeyValuePair<int, Transaction> transaction in transactionsList)
             {
                 if (selectedUser.Equals(transaction.Value.TransactionUser))

@@ -13,7 +13,8 @@ namespace BudgetApp
             { "[d]", "Wyświetl transakcje" },
             { "[f]", "Wyświetl listę kategorii"},
             { "[c]", "Wyświetl transakcje wg kategorii"},
-            { "[u]", "Wyświetl transakcje wg użytkownika" }
+            { "[u]", "Wyświetl transakcje wg użytkownika" },
+            { "[s]", "Wyświetl podsumowanie"}
         };
 
         public bool IsProgramOpen { get => _isProgramOpen; set => _isProgramOpen = value; }
@@ -70,7 +71,7 @@ namespace BudgetApp
                             Category.ManageCategories(categoriesList);
                             break;
 
-                        case ConsoleKey.C:
+                        case ConsoleKey.U:
                             User.PrintUsers(false, usersList);
                             int selectedUserID = GetConsoleInput<User>.GetUserInputID(usersList, false);
                             if (selectedUserID == -1)
@@ -78,7 +79,7 @@ namespace BudgetApp
                             Transaction.GetTransactionByUser(selectedUserID, transactionsList, categoriesList, usersList );
                             break;
 
-                        case ConsoleKey.U:
+                        case ConsoleKey.C:
                             Category.PrintCategories(false, categoriesList);
                             int selectedConsoleID = GetConsoleInput<Category>.GetUserInputID(categoriesList, false);
                             if (selectedConsoleID == -1)
@@ -100,6 +101,6 @@ namespace BudgetApp
                 ManageProgramWorking();
             }
                 Console.ReadKey();
-        }      
+        }
     }
 }

@@ -8,7 +8,6 @@ namespace BudgetApp
     {
         private Dictionary<int, Transaction> _budget;
         private double _balance = 0;
-        private Dictionary<string, (double, double)> _budgetStructure;
 
         internal static Dictionary<int, Transaction> transactionsList;
         internal static Dictionary<int, User> usersList;
@@ -17,7 +16,6 @@ namespace BudgetApp
         public Dictionary<int, Transaction> BudgetData { get => _budget; set => _budget = value; }
         public string BudgetSelector { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public double BudgetBalance { get => _balance; set => _balance = value; }
-        public Dictionary<string, (double CategoryAmount, double CategoryPercentage)> BudgetStructure { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public Budget()
         {
@@ -38,43 +36,63 @@ namespace BudgetApp
 
         public void EstablishBudgetStructure()
         {
-            // Krok 1. Zsumować kwoty w poszczególnych kategoriach.
-            //         - dla każdej kategorii w liście kategorii przefiltrować BudgetData,
-            //         - z pozyskanych transakcji zsumować wartości z Amount.
-            // Krok 2. Wyliczyć procentową wartość z wykorzystaniem BudgetBalance.
-            // Krok 3. Wygenerować słownik:
-            //         - nazwy transakcji jako klucze,
-            //         - krotka zawierająca sumy i procenty z ww. kroków jako wartości.
-            // Krok 4. Wyświetlić uporządkowaną tabelę w konsoli.
-
-            var transactionByCategories = new Dictionary<string, valueAndPercentage>();
-
+            var incomeCategories = new Dictionary<string, valueAndPercentage>();
+            var expenseCategories = new Dictionary<string, valueAndPercentage>();
             //populate with categories
-            foreach (var category in categoriesList)
+            foreach (var category in categoriesList.Values)
             {
-                transactionByCategories.Add(category.Value.CategoryName,new valueAndPercentage(0,0));
+                if (category.CategoryType.Equals("income"))
+                    incomeCategories.Add(category.CategoryName,new valueAndPercentage(0,0));
+                else if (category.CategoryType.Equals("expense"))
+                    expenseCategories.Add(category.CategoryName, new valueAndPercentage(0,0));
             }
 
             //sumup 
-            double sum = 0;
+            double sumExpense = 0;
+            double sumIncome = 0;
             foreach (var transaction in transactionsList.Values)
             {
-                transactionByCategories[transaction.TransactionCategory.CategoryName].value += transaction.TransactionAmount;
-                sum+= transaction.TransactionAmount;
+                if (transaction.TransactionCategory.CategoryType.Equals("income"))
+                {
+                    incomeCategories[transaction.TransactionCategory.CategoryName].value += transaction.TransactionAmount;
+                    sumIncome += transaction.TransactionAmount;
+                }
+                else if (transaction.TransactionCategory.CategoryType.Equals("expense"))
+                {
+                    expenseCategories[transaction.TransactionCategory.CategoryName].value += transaction.TransactionAmount;
+                    sumExpense += transaction.TransactionAmount;
+                }
             }
 
             //calculate %
-            foreach (var transByCat in transactionByCategories.Values)
+            foreach (var incomeTrans in incomeCategories.Values)
             {
-                transByCat.percentage = transByCat.value / sum; 
+                incomeTrans.percentage = incomeTrans.value / sumIncome; 
+            }
+            foreach (var expenseTrans in expenseCategories.Values)
+            {
+                expenseTrans.percentage = expenseTrans.value / sumExpense;
             }
 
-            foreach (KeyValuePair<string, (double amount, double percentage)> record in _budgetStructure)
+            //display
+            Console.ForegroundColor = ConsoleColor.Green;
+            foreach (KeyValuePair<string, valueAndPercentage> record in incomeCategories)
             {
-                Console.WriteLine($" + {record.Key}: {record.Value.amount} PLN ({record.Value.percentage}%)");
+                Console.WriteLine($" + {record.Key}: {record.Value.value} PLN ({(record.Value.percentage * 100).ToString("#.##")}%)");
             }
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("--------------------------------------------------");
+            Console.ForegroundColor = ConsoleColor.Red;
+            foreach (KeyValuePair<string, valueAndPercentage> record in expenseCategories)
+            {
+                Console.WriteLine($" + {record.Key}: {record.Value.value} PLN ({(record.Value.percentage * 100).ToString("#.##")}%)");
+            }
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            Console.WriteLine($"\n\t saldo: {(sumIncome - sumExpense).ToString("#.##")}");
+            Console.ReadLine();
         }
-        private class valueAndPercentage //musi być klasa structy też są immutable albo value type albo cośtam nie wiem
+        private class valueAndPercentage
         {
             public valueAndPercentage(double value, double percentage)
             {
@@ -84,7 +102,6 @@ namespace BudgetApp
 
             public double value { get; set; }
             public double percentage { get; set; }
-
         }
     }
 }

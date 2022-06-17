@@ -55,7 +55,6 @@ namespace BudgetApp
             Console.ForegroundColor = ConsoleColor.Yellow;
 
 
-            Console.WriteLine(" + [0]: dodaj kategorię");
             PrintCategories(false, categoriesList);
 
             Console.WriteLine(" \n -> Wybierz 0, aby dodać nową kategorię. \n -> Jeżeli chcesz zmodyfikować dane istniejącej kategorii, wypisz jego numer ID. \n -> Aby wrócić do głównego menu, naciśnij ENTER, pozostawiając pole puste.");
@@ -115,6 +114,7 @@ namespace BudgetApp
 
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("\n");
-        }   
+        }
+
     }
 }
